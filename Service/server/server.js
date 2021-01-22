@@ -1,24 +1,42 @@
-//Third-Party Modules
+/* Third-Party Modules */
 const express = require('express');
-//Local Modules
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+/* Local Modules */
 const carRouter = require('./router/car-router');
+const categoryCarRouter = require('./router/car_category-router');
+const branchOfficeRouter = require('./router/branch_office-router');
+const loginRouter = require('./router/login-router');
+const userRouter = require('./router/user-router');
 
+/* Consoles */
 console.log(`${ __dirname }`);
 console.log(`${process.env.NODE_ENV}`);
 
+/* Get Environment */
 if (process.env.NODE_ENV === 'development'){
   require('dotenv').config( { path: `${__dirname}/../.env.development`} );
 }else{
   require('dotenv').config()
 }
 
-//Init Express
+/* Init Express */
 const app = express();
 
-//Routers
+/* Third-Party Middleware */
+app.use(bodyParser.json());
+app.use(fileUpload({
+  limits: { fileSize: 1 * 1024 * 1024 },
+}));
+/* Routers */
 app.use('/api/v1/',carRouter);
+app.use('/api/v1/',categoryCarRouter);
+app.use('/api/v1/',branchOfficeRouter);
+app.use('/api/v1/',loginRouter);
+app.use('/api/v1/',userRouter);
 
-//HandlerError Middleware
+/* HandlerError Middleware */
 app.use((error, request, response, next) => {
   const status = error.status || 500;
   const message = error.message;
@@ -31,6 +49,16 @@ app.use((error, request, response, next) => {
   });
 });
 
-app.listen(process.env.PORT , () => {
-  console.log('ServerUp');
-});
+/* Connection to MongoDB and raise Server */
+const URL_DATABASE = process.env.URL_MONGO;
+mongoose.connect(URL_DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+}).then( () => {
+  /* Raise Server */
+  app.listen(process.env.PORT , () => {
+    console.log('ServerUp');
+  });
+}).catch((error) => console.log(error));
