@@ -27,6 +27,16 @@ var Car = new Schema({
   branch_office: { type: String, required: true, validate: validateBranchOffice },
 }, { timestamps: true });
 
+Car.methods.setAvailability = async function (){
+  this.available = true;
+  this.save();
+}
+
+Car.methods.setBranchOffice = async function (value){
+  this.branch_office = value;
+  this.save();
+}
+
 const model = mongoose.model("Car", Car);
 
 module.exports = model;

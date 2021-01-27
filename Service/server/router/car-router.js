@@ -9,6 +9,7 @@ const router = express.Router();
 router.post('/car',carController.saveCar);
 router.get('/car',carController.listCar);
 router.get('/car/:id',carController.getCarById);
+router.get('/car/byBranches/:branch',carController.getCarsByBranches);
 router.put('/car/:id',carController.updateCarById);
 
 //Export Router to use in server.js

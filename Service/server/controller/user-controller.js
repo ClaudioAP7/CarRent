@@ -51,5 +51,15 @@ const updateUserById = (request, response, next) => {
     });
 };
 
+const getUserByIdToParams = (request, response, next, id) => {
+    UserModel.findById(id).where({ available: true })
+    .exec((error, document) => {
+        if(error || !document) return errorManagement(error, next, document);
+
+        request.userDocument = document;
+        next();
+    });
+};
+
 /* Methods Exports */
-module.exports = { listUser, getUserById, updateUserById };
+module.exports = { listUser, getUserById, updateUserById, getUserByIdToParams };

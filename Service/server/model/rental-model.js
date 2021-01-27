@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-const Car = require('../model/car-model');
 const BranchOfficeModel = require('../model/branch_office-model');
 
 /* Validators */
@@ -16,14 +15,46 @@ var Rental = new Schema({
     email: { type: String, required: true },
   },
   detail: {
-    car: { type: Car },
+    car: { type: Object, required: true },
     renta_days: { type: Number, required: true },
   },
   total: { type: Number, required: true },
   picked_in: { type: String, required: true, validate: validateBranchOffice },
   returned_in: { type: String, required: true, validate: validateBranchOffice },
-  date: { type: Date, required: true, default: Date.now },
+  is_closed: { type: Boolean, required: true, default: false }
 }, { timestamps: true });
+
+Rental.methods.generateCarRent = async function (){
+  let totalPrice = this.detail.car.price * this.detail.renta_days;
+  this.total = totalPrice;
+  //await this.detail.car.setAvailability(false);
+  this.save();
+  let auxDetail = { ...this.detail.toObject()};
+  delete auxDetail.car.image;
+  delete auxDetail.car.available;
+  return {
+    user: this.user,
+    detail: auxDetail,
+    total: this.total,
+    picked_in: this.picked_in,
+    returned_in: this.returned_in
+  };
+};
+
+Rental.methods.returnCar = async function (){
+  this.is_closed = true;
+  console.log('-----> ',this.detail);
+  await this.detail.car.setAvailability();
+  //await this.detail.car.setBranchOffice(this.returned_in);
+  //this.save();
+  let auxDetail = { ...this.detail.toObject()};
+  delete auxDetail.car.image;
+  delete auxDetail.car.available;
+  return {
+    //detail: auxDetail,
+    total: this.total
+  };
+};
 
 const model = mongoose.model("Rental", Rental);
 

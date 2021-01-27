@@ -1,15 +1,17 @@
 /* Third-Party Module */
 const express = require('express');
 /* Local Module */
-const CategoryCarController = require('../controller/car_category-controller');
+const RentalController = require('../controller/rental-controller');
+const { getUserByIdToParams } = require('../controller/user-controller');
+const { getCarByIdToParams } = require('../controller/car-controller');
 /* Init router */
 const router = express.Router();
 
+/* ROUTERS PARAMS */
+router.param('userId', getUserByIdToParams);
 /* ROUTERS */
-router.post('/category',CategoryCarController.saveCarCategory);
-router.get('/category',CategoryCarController.listCarCategory);
-router.get('/category/:id',CategoryCarController.getCarCategoryById);
-router.put('/category/:id',CategoryCarController.updateCarCategoryById);
+router.post('/generatecarrent/:userId/', RentalController.generateCarRent);
+router.get('/returncar/:userId/', RentalController.returnCar);
 
 //Export Router to use in server.js
 module.exports = router;

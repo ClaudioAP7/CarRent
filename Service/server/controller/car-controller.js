@@ -47,6 +47,8 @@ const listCar = (request, response, next) => {
     CarModel.find().exec((error, document) =>{
         if(error || !document) return errorManagement(error, next, document);
 
+        //document.forEach(element => delete element.image);
+
         response.json({
             result: true,
             data: document
@@ -58,6 +60,22 @@ const getCarById = (request, response, next) => {
     let id = request.params.id;
 
     CarModel.findById(id, (error, document) => {
+        if(error || !document) return errorManagement(error, next, document);
+
+        let carData = document.toObject();
+        delete carData.image;
+
+        response.json({
+            result: true,
+            data: carData
+        });
+    });
+};
+
+const getCarsByBranches = (request, response, next) => {
+    let branch = request.params.branch;
+    CarModel.find().where({ branch_office: branch })
+    .exec((error, document) => {
         if(error || !document) return errorManagement(error, next, document);
 
         response.json({
@@ -80,5 +98,15 @@ const updateCarById = (request, response, next) => {
     });
 };
 
+const getCarByIdToParams = (request, response, next, id) => {
+    CarModel.findById(id).where({ available: true })
+    .exec((error, document) => {
+        if(error || !document) return errorManagement(error, next, document);
+
+        request.carDocument = document;
+        next();
+    });
+};
+
 /* Methods Exports */
-module.exports = { saveCar, listCar, getCarById, updateCarById };
+module.exports = { saveCar, listCar, getCarById, updateCarById, getCarByIdToParams, getCarsByBranches };
