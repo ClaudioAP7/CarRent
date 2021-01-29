@@ -108,5 +108,18 @@ const getCarByIdToParams = (request, response, next, id) => {
     });
 };
 
+const deleteCarById = (request, response, next) => {
+    request.carDocument.available = false;
+    console.log(request.carDocument);
+    request.carDocument.save((error, document) =>{
+        if (error || !document) return errorManagement(error, next, document);
+
+        response.json({
+            result: true,
+            data: document
+        });
+    });
+};
+
 /* Methods Exports */
-module.exports = { saveCar, listCar, getCarById, updateCarById, getCarByIdToParams, getCarsByBranches };
+module.exports = { saveCar, listCar, getCarById, updateCarById, getCarByIdToParams, getCarsByBranches, deleteCarById };

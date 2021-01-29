@@ -10,8 +10,10 @@ const router = express.Router();
 /* ROUTERS PARAMS */
 router.param('userId', getUserByIdToParams);
 /* ROUTERS */
-router.post('/generatecarrent/:userId/', RentalController.generateCarRent);
-router.get('/returncar/:userId/', RentalController.returnCar);
+router.post('/generatecarrent/:userId/', [isAuth], RentalController.generateCarRent);
+router.get('/returncar/:userId/', [isAuth], RentalController.returnCar);
+router.get('/rents/', [isAuth], RentalController.listRent);
+router.get('/rent/:id', [isAuth], RentalController.getRentById);
 
 //Export Router to use in server.js
 module.exports = router;

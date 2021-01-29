@@ -8,13 +8,37 @@ function errorManagement(err, next, document){
         return next(err);
     }
     if(!document){
-        const error = new Error("Branch Office not found");
+        const error = new Error("Car not found");
         error.statusCode = 500;
         return next(error);
     }
 }
 
 /* Methods */
+const listRent = (request, response, next) => {
+    RentalModel.find().exec((error, document) => {
+        if(error || !document) return errorManagement(error, next, document);
+
+        response.json({
+            result: true,
+            data: document
+        });
+    });
+};
+
+const getRentById = (request, response, next) => {
+    let id = request.params.id;
+
+    RentalModel.findById(id, (error, document) => {
+        if(error || !document) return errorManagement(error, next, document);
+
+        response.json({
+            result: true,
+            data: document
+        });
+    });
+};
+
 const generateCarRent = async (request, response) => {
     let car = request.session.car ? request.session.car : undefined;
 
@@ -67,5 +91,8 @@ const returnCar = async (request, response) => {
 
 /* Methods Exports */
 module.exports = {
-    generateCarRent, returnCar
+    generateCarRent, 
+    returnCar, 
+    listRent,
+    getRentById
 };

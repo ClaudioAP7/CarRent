@@ -66,10 +66,24 @@ const updateCarCategoryById = (request, response, next) => {
     });
 };
 
+const deleteCarCategoryById = (request, response, next) => {
+    let id = request.params.id;
+    
+    CarCategoryModel.findByIdAndRemove(id, (error, document) => {
+        if (error || !document) return errorManagement(error, next, document);
+
+        response.json({
+        result: true,
+        data: document
+        });
+    });
+};
+
 /* Methods Exports */
 module.exports = {
     saveCarCategory,
     listCarCategory,
     getCarCategoryById,
-    updateCarCategoryById
+    updateCarCategoryById,
+    deleteCarCategoryById
 };

@@ -44,6 +44,7 @@ app.use(cors({
   credentials: true,
   origin: true
 }));
+
 /* Routers */
 app.use('/api/v1/',carRouter);
 app.use('/api/v1/',categoryCarRouter);

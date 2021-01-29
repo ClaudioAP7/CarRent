@@ -69,10 +69,24 @@ const updateBranchOfficeById = (request, response, next) => {
     });
 };
 
+const deleteBranchOfficeById = (request, response, next) => {
+    let id = request.params.id;
+    
+    BranchOfficeModel.findByIdAndRemove(id, (error, document) => {
+        if (error || !document) return errorManagement(error, next, document);
+
+        response.json({
+        result: true,
+        data: document
+        });
+    });
+};
+
 /* Methods Exports */
 module.exports = {
     saveBranchOffice,
     listBranchOffice,
     getBranchOfficeById,
-    updateBranchOfficeById
+    updateBranchOfficeById,
+    deleteBranchOfficeById
 };

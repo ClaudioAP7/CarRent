@@ -43,7 +43,6 @@ Rental.methods.generateCarRent = async function (){
 
 Rental.methods.returnCar = async function (){
   this.is_closed = true;
-  console.log('-----> ',this.total);
   await this.detail.car.setValues(true, this.returned_in);
   this.save();
   let auxDetail = { ...this.detail.toObject()};

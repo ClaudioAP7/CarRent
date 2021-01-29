@@ -7,7 +7,7 @@ function errorManagement(err, next, document){
         return next(err);
     }
     if(!document){
-        const error = new Error("Car not found");
+        const error = new Error("User not found");
         error.statusCode = 500;
         return next(error);
     }

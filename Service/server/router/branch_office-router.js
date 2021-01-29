@@ -8,9 +8,10 @@ const router = express.Router();
 
 /* ROUTERS */
 router.post('/branch-office', [isAuth, isAdmin],BranchOfficeController.saveBranchOffice);
-router.get('/branch-office', [isAuth],BranchOfficeController.listBranchOffice);
-router.get('/branch-office/:id', [isAuth],BranchOfficeController.getBranchOfficeById);
+router.get('/branch-office',BranchOfficeController.listBranchOffice);
+router.get('/branch-office/:id',BranchOfficeController.getBranchOfficeById);
 router.put('/branch-office/:id', [isAuth, isAdmin],BranchOfficeController.updateBranchOfficeById);
+router.delete('/branch-office/:id', [isAuth, isAdmin],BranchOfficeController.deleteBranchOfficeById);
 
 //Export Router to use in server.js
 module.exports = router;

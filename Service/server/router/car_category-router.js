@@ -8,9 +8,10 @@ const router = express.Router();
 
 /* ROUTERS */
 router.post('/category', [isAuth, isAdmin], CategoryCarController.saveCarCategory);
-router.get('/category', [isAuth], CategoryCarController.listCarCategory);
-router.get('/category/:id', [isAuth], CategoryCarController.getCarCategoryById);
+router.get('/category', CategoryCarController.listCarCategory);
+router.get('/category/:id', CategoryCarController.getCarCategoryById);
 router.put('/category/:id', [isAuth, isAdmin],CategoryCarController.updateCarCategoryById);
+router.delete('/category/:id', [isAuth, isAdmin],CategoryCarController.deleteCarCategoryById);
 
 //Export Router to use in server.js
 module.exports = router;
