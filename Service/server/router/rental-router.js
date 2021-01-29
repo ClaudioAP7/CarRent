@@ -3,7 +3,7 @@ const express = require('express');
 /* Local Module */
 const RentalController = require('../controller/rental-controller');
 const { getUserByIdToParams } = require('../controller/user-controller');
-const { getCarByIdToParams } = require('../controller/car-controller');
+const { isAuth } = require('../middleware/auth');
 /* Init router */
 const router = express.Router();
 

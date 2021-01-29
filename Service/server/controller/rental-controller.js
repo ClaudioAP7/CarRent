@@ -24,7 +24,6 @@ const generateCarRent = async (request, response) => {
           message: 'Car Rent is empty'
         })
     }
-
     let carId = request.session.car.carId;
     let carDocument = await CarModel.findById(carId).select('-image').exec();
     let userDocument = request.userDocument;
@@ -55,7 +54,9 @@ const generateCarRent = async (request, response) => {
 const returnCar = async (request, response) => {
     let userDocument = request.userDocument;
     
-    let rentDocument = await RentalModel.findOne({"user.userId": userDocument._id}).lean().exec();
+    let rentDocument = await RentalModel.findOne({"user.userId": userDocument._id}).exec();
+    let carDocument = await CarModel.findById(rentDocument.detail.car._id).select('-image').exec();
+    rentDocument.detail.car = carDocument;
     let auxResponse =  await new RentalModel(rentDocument).returnCar();
 
     response.json({

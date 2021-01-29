@@ -15,7 +15,7 @@ var Rental = new Schema({
     email: { type: String, required: true },
   },
   detail: {
-    car: { type: Object, required: true },
+    car: { type: Object, required: true, ref: 'Car' },
     renta_days: { type: Number, required: true },
   },
   total: { type: Number, required: true },
@@ -27,7 +27,7 @@ var Rental = new Schema({
 Rental.methods.generateCarRent = async function (){
   let totalPrice = this.detail.car.price * this.detail.renta_days;
   this.total = totalPrice;
-  //await this.detail.car.setAvailability(false);
+  await this.detail.car.setValues(false);
   this.save();
   let auxDetail = { ...this.detail.toObject()};
   delete auxDetail.car.image;
@@ -43,15 +43,14 @@ Rental.methods.generateCarRent = async function (){
 
 Rental.methods.returnCar = async function (){
   this.is_closed = true;
-  console.log('-----> ',this.detail);
-  await this.detail.car.setAvailability();
-  //await this.detail.car.setBranchOffice(this.returned_in);
-  //this.save();
+  console.log('-----> ',this.total);
+  await this.detail.car.setValues(true, this.returned_in);
+  this.save();
   let auxDetail = { ...this.detail.toObject()};
   delete auxDetail.car.image;
   delete auxDetail.car.available;
   return {
-    //detail: auxDetail,
+    detail: auxDetail,
     total: this.total
   };
 };

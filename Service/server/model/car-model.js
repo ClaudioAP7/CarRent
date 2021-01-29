@@ -27,13 +27,13 @@ var Car = new Schema({
   branch_office: { type: String, required: true, validate: validateBranchOffice },
 }, { timestamps: true });
 
-Car.methods.setAvailability = async function (){
-  this.available = true;
-  this.save();
-}
-
-Car.methods.setBranchOffice = async function (value){
-  this.branch_office = value;
+Car.methods.setValues = async function (available, branch_office){
+  if(available!=undefined){
+    this.available = available;
+  }
+  if(branch_office){
+    this.branch_office = branch_office;
+  }
   this.save();
 }
 
